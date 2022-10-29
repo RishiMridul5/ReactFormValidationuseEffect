@@ -15,22 +15,22 @@ const Login = (props) => {
 
   useEffect(() => {
     setFormIsValid(
-      enteredEmail.includes("@") && enteredPassword.trim().length > 6
+      enteredEmail.includes("@") && enteredPassword.trim().length > 6 && enteredCollege.trim().length < 5
     );
-  }, [enteredEmail, enteredPassword]);
+  }, [enteredEmail, enteredPassword, enteredCollege]);
 
   const emailChangeHandler = (event) => {
     setEnteredEmail(event.target.value);
   };
   const collegeChangeHandler = (event) => {
-    setEnteredEmail(event.target.value);
+    setEnteredCollege(event.target.value);
   };
   const passwordChangeHandler = (event) => {
     setEnteredPassword(event.target.value);
   };
 
   const validateCollegeHandler = () => {
-    setCollegeIsValid(enteredEmail.trim().length <5);
+    setCollegeIsValid(enteredCollege.trim().length < 5);
   };
   const validateEmailHandler = () => {
     setEmailIsValid(enteredEmail.includes("@"));
