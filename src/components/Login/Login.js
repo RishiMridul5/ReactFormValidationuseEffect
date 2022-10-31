@@ -1,58 +1,81 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
+import { initialState, reducer } from "./Helper";
 
 const Login = (props) => {
-  const [enteredEmail, setEnteredEmail] = useState("");
-  const [emailIsValid, setEmailIsValid] = useState();
-  const [enteredCollege, setEnteredCollege] = useState("");
-  const [collegeIsValid, setCollegeIsValid] = useState();
-  const [enteredPassword, setEnteredPassword] = useState("");
-  const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
 
+  const [emailState, dispatchEmail] = useReducer(reducer, initialState);
+  const [passwordState, dispatchPassword] = useReducer(reducer, initialState);
+  const [collegeState, dispatchCollege] = useReducer(reducer, initialState);
+
+  const { valid: emailisValid } = emailState;
+  const { valid: passwordisValid } = passwordState;
+  const { valid: collegeisValid } = collegeState;
+
   useEffect(() => {
-    console.log(`Checking validity👓`);
-
-    let waitForCheck = setTimeout(() => {
-      setFormIsValid(
-        enteredEmail.includes("@") &&
-          enteredPassword.trim().length > 6 &&
-          enteredCollege.trim().length < 5
-      );
-      return () => {
-        // clean the timer
-        clearTimeout(waitForCheck)
+    console.log(emailisValid, passwordisValid, collegeisValid);
+    const timer = setTimeout(() => {
+      if (emailisValid && passwordisValid && collegeisValid) {
+        setFormIsValid(true);
+        console.log(`Form inputs are valid`);
       }
-    }, 800);
-  }, [enteredEmail, enteredPassword, enteredCollege]);
+    }, 500);
 
-  const emailChangeHandler = (event) => {
-    setEnteredEmail(event.target.value);
+    return () => clearTimeout(timer);
+  }, [emailisValid, passwordisValid, collegeisValid]);
+
+  const emailChangeHandler = (e) => {
+    dispatchEmail({
+      type: "USER_INPUT",
+      field: "email",
+      val: e.target.value,
+    });
   };
-  const collegeChangeHandler = (event) => {
-    setEnteredCollege(event.target.value);
+
+  const collegeChangeHandler = (e) => {
+    dispatchCollege({
+      type: "USER_INPUT",
+      field: "college",
+      val: e.target.value,
+    });
   };
-  const passwordChangeHandler = (event) => {
-    setEnteredPassword(event.target.value);
+
+  const passwordChangeHandler = (e) => {
+    dispatchPassword({
+      type: "USER_INPUT",
+      field: "password",
+      val: e.target.value,
+    });
+  };
+
+  const validateEmailHandler = () => {
+    dispatchEmail({
+      type: "INPUT_BLUR",
+      field: "email",
+    });
   };
 
   const validateCollegeHandler = () => {
-    setCollegeIsValid(enteredCollege.trim().length < 5);
+    dispatchCollege({
+      type: "INPUT_BLUR",
+      field: "college",
+    });
   };
-  const validateEmailHandler = () => {
-    setEmailIsValid(enteredEmail.includes("@"));
+  const validatePasswordHandler = (e) => {
+    console.log(e.target);
+    dispatchPassword({
+      type: "INPUT_BLUR",
+      field: "password",
+    });
   };
 
-  const validatePasswordHandler = () => {
-    setPasswordIsValid(enteredPassword.trim().length > 6);
-  };
-
-  const submitHandler = (event) => {
-    event.preventDefault();
-    props.onLogin(enteredEmail, enteredPassword);
+  const submitHandler = (e) => {
+    e.preventDefault();
+    props.onLogin(emailState.value, passwordState.value, collegeState.value);
   };
 
   return (
@@ -60,42 +83,42 @@ const Login = (props) => {
       <form onSubmit={submitHandler}>
         <div
           className={`${classes.control} ${
-            emailIsValid === false ? classes.invalid : ""
+            emailState.valid === false ? classes.invalid : ""
           }`}
         >
           <label htmlFor="email">E-Mail</label>
           <input
             type="email"
             id="email"
-            value={enteredEmail}
+            value={emailState.val}
             onChange={emailChangeHandler}
             onBlur={validateEmailHandler}
           />
         </div>
         <div
           className={`${classes.control} ${
-            collegeIsValid === false ? classes.invalid : ""
+            collegeState.valid === false ? classes.invalid : ""
           }`}
         >
           <label htmlFor="college">College</label>
           <input
             type="text"
             id="college"
-            value={enteredCollege}
+            value={collegeState.value}
             onChange={collegeChangeHandler}
             onBlur={validateCollegeHandler}
           />
         </div>
         <div
           className={`${classes.control} ${
-            passwordIsValid === false ? classes.invalid : ""
+            passwordState.valid === false ? classes.invalid : ""
           }`}
         >
           <label htmlFor="password">Password</label>
           <input
             type="password"
             id="password"
-            value={enteredPassword}
+            value={passwordState.value}
             onChange={passwordChangeHandler}
             onBlur={validatePasswordHandler}
           />
