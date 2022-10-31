@@ -1,0 +1,27 @@
+What is the problem we are trying to solve here?
+What is prop chain and what is the problem that it has?
+How do we plan to solve it?
+
+=>
+Till now we were using prop drilling to pass event handlers in App component to its child components to update the state of App component. This is called lifing the state up i.e lifitn the state up in component tree. We lifted state isLoggedIn by passing the handler function loginHandler and logouHandler as props to child components. The problem here is intermediate components between the App component and the child component which needs to update the state of isLoggedIn state might not need the state and hence working with state this way creates a situation of forwarding the state through many components. 
+This chain of forwarding the state might become longer when the component tree is very large in bigger apps which can make the application hard to understand. 
+
+
+The solution is to use Context API  which holds the state and gives access to all the components wrapped by the Context.provider
+
+
+Please write down the steps involved to add the Login context
+How do we consume the context API
+What do you think about context API. When would you use it
+
+=>auth-context.js implements const context = React.context() whihc return a context object which has 2 special properties Consumer and Provider.
+In App component we wrap all the components which needs access to the global state using context.Provider and we pass a value prop which contains the state. 
+ Login component imports the context and consumes the provided context either through useContext() or context.Consumer. Since the state object contains onLogin handler login component can use it. 
+
+=> We can consume the context API by using <Context.Consumer> < /Context.Consumer> and using a callback function accepting a argument of the context object to use that value or we can use useContext() hook to directly refer to the Context and get state object.
+
+=> Context API is good to use in those situations where we need to share state across multiple branches in the component tree and is not suitable when we want to share state with a direct child component or if the branch is not very long.
+
+What are the steps to convert to context api hook? Why do we need this steps any idea? 
+=> import the context in the component which needs access to the state and use useContext(context) to consume the context. useContext() will return the state object.
+All the components wrapped inside Context.Provider will have access to the context and can use the state.

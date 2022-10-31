@@ -6,11 +6,15 @@ const AuthContext = React.createContext({
 });
 
 const AuthContextProvider = ({ children }) => {
+  
+  console.log(AuthContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
 
   const loginHandler = (email, password, college) => {
     localStorage.setItem("isLoggedIn", "1");
     setIsLoggedIn(true);
+    setUserEmail(email);
   };
 
   const logoutHandler = () => {
@@ -27,6 +31,7 @@ const AuthContextProvider = ({ children }) => {
         isLoggedIn: isLoggedIn,
         onLogin: loginHandler,
         onLogout: logoutHandler,
+        userEmail: userEmail,
       }}
     >
       {children}

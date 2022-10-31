@@ -4,10 +4,11 @@ import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
 import { initialState, reducer } from "./Helper";
-import {AuthContext} from "../../store/auth-context";
+import { AuthContext } from "../../store/auth-context";
 
 const Login = () => {
-  const {onLogin} = useContext(AuthContext);
+  const { onLogin } = useContext(AuthContext);
+ 
   const [formIsValid, setFormIsValid] = useState(false);
 
   const [emailState, dispatchEmail] = useReducer(reducer, initialState);

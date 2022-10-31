@@ -3,7 +3,6 @@ import Home from "./components/Home/Home";
 import MainHeader from "./components/MainHeader/MainHeader";
 import { useContext } from "react";
 import { AuthContext } from "./store/auth-context";
-
 function App() {
   const { isLoggedIn } = useContext(AuthContext);
 
