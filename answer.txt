@@ -1,27 +1,31 @@
-What is the problem we are trying to solve here?
-What is prop chain and what is the problem that it has?
-How do we plan to solve it?
-
+What does the AuthContextProvider do eactly.
+Tell the steps used by the udemy trainer to migrate to AuthContextProvider pattern
 =>
-Till now we were using prop drilling to pass event handlers in App component to its child components to update the state of App component. This is called lifing the state up i.e lifitn the state up in component tree. We lifted state isLoggedIn by passing the handler function loginHandler and logouHandler as props to child components. The problem here is intermediate components between the App component and the child component which needs to update the state of isLoggedIn state might not need the state and hence working with state this way creates a situation of forwarding the state through many components. 
-This chain of forwarding the state might become longer when the component tree is very large in bigger apps which can make the application hard to understand. 
+    AuthContextProvider returns <AuthContext.Provider></AuthContext.Provider>.
+    It is a component function which will wrap App component and provide the context to all the wrapped(children) components.
 
+    isLoggedIn, loginHandler and logouHandler which were previously in App component is now moved inside AuthContextProvider component and all these variables are made available in context.
 
-The solution is to use Context API  which holds the state and gives access to all the components wrapped by the Context.provider
+    <AuthContext.Provider
+      value={{
+        isLoggedIn: isLoggedIn,
+        onLogin: loginHandler,
+        onLogout: logoutHandler,
+        userEmail: userEmail,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
 
+What are the disadvantage of Context Api and what is the solution
+=> Some components and their functionalities are meant to be generic such as the Button component which is just a UI component. This component can be used to both for logging in the Login component and also to logout in the Navigation component. Using a context to assign a specific handler method on onClick event will restrict it's functionality to logout the user only.
+Also, context is not optimized for high frequency changes. The solution to this is using a state management library such as Redux.
 
-Please write down the steps involved to add the Login context
-How do we consume the context API
-What do you think about context API. When would you use it
-
-=>auth-context.js implements const context = React.context() whihc return a context object which has 2 special properties Consumer and Provider.
-In App component we wrap all the components which needs access to the global state using context.Provider and we pass a value prop which contains the state. 
- Login component imports the context and consumes the provided context either through useContext() or context.Consumer. Since the state object contains onLogin handler login component can use it. 
-
-=> We can consume the context API by using <Context.Consumer> < /Context.Consumer> and using a callback function accepting a argument of the context object to use that value or we can use useContext() hook to directly refer to the Context and get state object.
-
-=> Context API is good to use in those situations where we need to share state across multiple branches in the component tree and is not suitable when we want to share state with a direct child component or if the branch is not very long.
-
-What are the steps to convert to context api hook? Why do we need this steps any idea? 
-=> import the context in the component which needs access to the state and use useContext(context) to consume the context. useContext() will return the state object.
-All the components wrapped inside Context.Provider will have access to the context and can use the state.
+When should you call hooks and when you should not
+Tell about the 3 rules and explain each one of them
+=>
+1. Can be used in functional components and custom hooks
+2. Cannot be used 
+    2.1 Inside a function (expect component function and custom hooks)
+    2.2 Inside a block
+3. Include all variables and functions except useState and useReducer used in the useEffect callback in the dependency list
