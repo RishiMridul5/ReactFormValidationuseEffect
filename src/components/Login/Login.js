@@ -4,7 +4,7 @@ import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
 import { initialState, reducer } from "./Helper";
-import AuthContext from "../../store/auth-context";
+import {AuthContext} from "../../store/auth-context";
 
 const Login = () => {
   const {onLogin} = useContext(AuthContext);
@@ -19,7 +19,7 @@ const Login = () => {
   const { valid: collegeisValid } = collegeState;
 
   useEffect(() => {
-    console.log(emailisValid, passwordisValid, collegeisValid);
+    // console.log(emailisValid, passwordisValid, collegeisValid);
     const timer = setTimeout(() => {
       if (emailisValid && passwordisValid && collegeisValid) {
         setFormIsValid(true);
