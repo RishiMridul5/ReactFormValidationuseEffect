@@ -3,9 +3,10 @@ import React, { useState, useEffect } from "react";
 import Login from "./components/Login/Login";
 import Home from "./components/Home/Home";
 import MainHeader from "./components/MainHeader/MainHeader";
+import AuthContext from "./store/auth-context";
 
 function App() {
-  console.log(`App rendered`);
+  // console.log(`App rendered`);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const loginHandler = (email, password, college) => {
@@ -14,22 +15,24 @@ function App() {
   };
 
   const logoutHandler = () => {
-    localStorage.removeItem('isLoggedIn')
+    localStorage.removeItem("isLoggedIn");
     setIsLoggedIn(false);
   };
 
   useEffect(() => {
     if (localStorage.getItem("isLoggedIn") === "1") setIsLoggedIn(true);
-  },[]);
+  }, []);
 
   return (
-    <React.Fragment>
-      <MainHeader isAuthenticated={isLoggedIn} onLogout={logoutHandler} />
+    <AuthContext.Provider
+      value={{ isLoggedIn, onLogout: logoutHandler, onLogin: loginHandler }}
+    >
+      <MainHeader />
       <main>
-        {!isLoggedIn && <Login onLogin={loginHandler} />}
-        {isLoggedIn && <Home onLogout={logoutHandler} />}
+        {!isLoggedIn && <Login />}
+        {isLoggedIn && <Home />}
       </main>
-    </React.Fragment>
+    </AuthContext.Provider>
   );
 }
 
